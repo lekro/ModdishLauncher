@@ -9,6 +9,6 @@ public class ModdishLauncher {
 		System.exit(0);
 	}
 	public static void main(String args[]) {
-		ModdishGUI moddishGUI = new ModdishGUI();
+		new ModdishGUI();
 	}
 }
