@@ -1,7 +1,7 @@
 package lekro.moddish.launcher;
 
 
-public class ModdishLauncher {
+public class ModdishLauncher implements Runnable {
 	
 	
 	
@@ -9,6 +9,10 @@ public class ModdishLauncher {
 		System.exit(0);
 	}
 	public static void main(String args[]) {
+		new ModdishGUI();
+	}
+	@Override
+	public void run() {
 		new ModdishGUI();
 	}
 }
