@@ -13,6 +13,7 @@ public class ModdishLauncher implements Runnable {
 	}
 	@Override
 	public void run() {
+		
 		new ModdishGUI();
 	}
 }

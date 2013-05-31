@@ -1,14 +1,16 @@
 package lekro.moddish.launcher;
 
+import java.applet.Applet;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -138,7 +140,7 @@ public class ModdishGUI implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.out.println(((JButton) e.getSource()).getText());
-		
+		String myDir = System.getProperty("user.dir");
 		if (e.getSource().equals(vanillaButton)) {
 			System.out.println(System.getProperty("user.dir"));
 			String binDir = "minecrafts/vanilla/.minecraft/bin/";
@@ -197,21 +199,41 @@ public class ModdishGUI implements ActionListener {
 
 			System.setProperty("org.lwjgl.librarypath", nativesDir);
 			System.setProperty("net.java.games.input.librarypath", nativesDir);
-			System.setProperty("minecraft.applet.TargetDirectory", System.getProperty("user.dir"));
+			/*String path = "";
+			try {
+				path = new File(ModdishLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath();
+			} catch (URISyntaxException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}*/
+			System.setProperty("minecraft.applet.TargetDirectory", myDir);
 			URL[] urls = new URL[]{minecraftJar, lwjglJar, lwjgl_utilJar, jinputJar};
 			ClassLoader cl = new URLClassLoader(urls, ModdishLauncher.class.getClassLoader());
-			Class<?> cls = null;
-			
+			Class<?> mc = null;
+			//																								Thanks to Forkk and Orochimarufan for helping me with getting Minecraft to target a different directory :D
 			try {
-				cls = cl.loadClass("net.minecraft.client.MinecraftApplet");
-			} catch (ClassNotFoundException e1) {
+				mc = cl.loadClass("net.minecraft.client.Minecraft");
+			} catch (ClassNotFoundException e2) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}/*
-			Applet myApplet = null;
+				e2.printStackTrace();
+			}
+			Field[] fields = mc.getDeclaredFields();
+			Field mcPathField = null;
+			for (int i = 0; i < fields.length; i++) {
+				Field f = fields[i];
+				if (f.getType() != File.class) {
+					continue;
+				}
+				if (f.getModifiers() != (Modifier.PRIVATE + Modifier.STATIC)) {
+					continue;
+				}
+				mcPathField = f;
+				break;
+			}
+			mcPathField.setAccessible(true);
 			try {
-				myApplet = (Applet) cls.newInstance();
-			} catch (InstantiationException e2) {
+				mcPathField.set(null, new File(myDir + "/minecrafts/vanilla/"));
+			} catch (IllegalArgumentException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			} catch (IllegalAccessException e2) {
@@ -219,29 +241,25 @@ public class ModdishGUI implements ActionListener {
 				e2.printStackTrace();
 			}
 			
-			myApplet.init();
-			myApplet.start();*/
+			Class<?> cls = null;
+			try {
+				cls = cl.loadClass("net.minecraft.client.MinecraftApplet");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
-			Method[] allMethods = cls.getDeclaredMethods();
-			String[] args2 = {"hi", "hi", "hi"};
-			Object[] args = {args2};
-		    for (Method m : allMethods) {
-		    	String mname = m.getName();
-		    	System.out.println(mname);
-		    	if (mname.equalsIgnoreCase("main")) {
-		    		try {
-						m.invoke(this, args);
-					} catch (IllegalArgumentException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IllegalAccessException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (InvocationTargetException e1) {
-						e1.printStackTrace();
-					}
-		    	}
-		    }
+			try {
+				Applet applet = (Applet) cls.newInstance();
+				ModdishFrame myWindow = new ModdishFrame("Moddish Modpack");
+				myWindow.startMe(applet, "Tester", "Not a real session ID", new Dimension(854, 480), false);
+			} catch (InstantiationException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IllegalAccessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 }
