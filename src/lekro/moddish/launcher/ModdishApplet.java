@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.TreeMap;
 
+@SuppressWarnings("serial")
 public class ModdishApplet extends Applet implements AppletStub {
 	private Applet myApplet;
 	private URL myURL;

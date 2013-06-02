@@ -8,6 +8,7 @@ import java.awt.event.WindowListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@SuppressWarnings("serial")
 public class ModdishFrame extends Frame implements WindowListener {
 	private ModdishApplet myApplet = null;
 	public ModdishFrame(String title) {
@@ -19,7 +20,7 @@ public class ModdishFrame extends Frame implements WindowListener {
 			myApplet = new ModdishApplet(applet, new URL("http://www.minecraft.net/game"));
 		} catch (MalformedURLException e) {}
 		myApplet.setParameter("username", user);
-		myApplet.setParameter("sessionid", session);
+		myApplet.setParameter("se  ssionid", session);
 		myApplet.setParameter("stand-alone", "true");
 		applet.setStub(myApplet);
 		this.add(myApplet);
@@ -36,10 +37,7 @@ public class ModdishFrame extends Frame implements WindowListener {
 		setVisible(true);
 	}
 	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void windowOpened(WindowEvent e) {}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
@@ -63,34 +61,13 @@ public class ModdishFrame extends Frame implements WindowListener {
 	}
 
 	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void windowClosed(WindowEvent e) {}
 	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void windowIconified(WindowEvent e) {}
 	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void windowDeiconified(WindowEvent e) {}
 	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void windowActivated(WindowEvent e) {}
 	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
+	public void windowDeactivated(WindowEvent e) {}
 }

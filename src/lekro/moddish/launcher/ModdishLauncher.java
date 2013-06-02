@@ -9,6 +9,7 @@ public class ModdishLauncher implements Runnable {
 		System.exit(0);
 	}
 	public static void main(String args[]) {
+		
 		new ModdishGUI();
 	}
 	@Override
