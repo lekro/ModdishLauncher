@@ -20,7 +20,7 @@ public class ModdishFrame extends Frame implements WindowListener {
 			myApplet = new ModdishApplet(applet, new URL("http://www.minecraft.net/game"));
 		} catch (MalformedURLException e) {}
 		myApplet.setParameter("username", user);
-		myApplet.setParameter("se  ssionid", session);
+		myApplet.setParameter("sessionid", session);
 		myApplet.setParameter("stand-alone", "true");
 		applet.setStub(myApplet);
 		this.add(myApplet);

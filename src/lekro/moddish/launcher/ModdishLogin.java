@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -13,24 +12,32 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import javax.swing.JOptionPane;
+
 public class ModdishLogin {
-	public static void doLogin(String username, String password) {
+	public static boolean doLogin(String username, String password) {
 		URL loginURL = null;
 		String response = null;
 		try {
 			loginURL = new URL("http://login.minecraft.net/?user=" + username + "&password=" + password + "&version=13");
 		} catch (MalformedURLException e) {}
 		try {
-			InputStream is = loginURL.openStream();
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-			response = br.readLine();
+			response = new BufferedReader(new InputStreamReader(loginURL.openStream())).readLine();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println("Response from login server: "+response);
+		
 		String[] loginInfo = response.split(":");
-		startGame(loginInfo[2], loginInfo[3]);
+		if (loginInfo.length == 5) {
+			System.out.println("Username: "+loginInfo[2]+", Session ID: "+loginInfo[3]);
+			startGame(loginInfo[2], loginInfo[3]);
+			return true;
+		}
+		else {
+			JOptionPane.showMessageDialog(ModdishGUI.dialog, response, "Login error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
 	}
 	public static void startGame(String username, String sessionid) {
 		String myDir = System.getProperty("user.dir");
@@ -99,6 +106,7 @@ public class ModdishLogin {
 			ModdishFrame myWindow = new ModdishFrame("Moddish Modpack");
 			myWindow.startMe(applet, username, sessionid, new Dimension(854, 480), false);
 		} catch (InstantiationException e1) {
+			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IllegalAccessException e1) {
 			e1.printStackTrace();

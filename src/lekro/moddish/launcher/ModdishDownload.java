@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -66,16 +68,70 @@ public class ModdishDownload {
 		}
 	}
 	public static void getLWJGL(String binDir) {
-		getLWJGLFile(binDir + "lwjgl.jar", "lwjgl.jar");
-		getLWJGLFile(binDir + "lwjgl_util.jar", "lwjgl_util.jar");
-		getLWJGLFile(binDir + "jinput.jar", "jinput.jar");
-		getLWJGLFile(binDir + File.separator + "natives" + File.separator + "jinput-dx8_64.dll", "windows/jinput-dx8_64.dll");
-		getLWJGLFile(binDir + File.separator + "natives" + File.separator + "jinput-dx8.dll", "windows/jinput-dx8.dll");
-		getLWJGLFile(binDir + File.separator + "natives" + File.separator + "jinput-raw.dll", "windows/jinput-raw.dll");
-		getLWJGLFile(binDir + File.separator + "natives" + File.separator + "lwjgl.dll", "windows/lwjgl.dll");
-		getLWJGLFile(binDir + File.separator + "natives" + File.separator + "lwjgl64.dll", "windows/lwjgl64.dll");
-		getLWJGLFile(binDir + File.separator + "natives" + File.separator + "OpenAL32.dll", "windows/OpenAL32.dll");
-		getLWJGLFile(binDir + File.separator + "natives" + File.separator + "OpenAL64.dll", "windows/OpenAL64.dll");
-		
+		List<String> saveAs = new LinkedList<String>();
+		List<String> loadFrom = new LinkedList<String>();
+		saveAs.add("lwjgl.jar");
+		saveAs.add("lwjgl_util.jar");
+		saveAs.add("jinput.jar");
+		loadFrom.add("lwjgl.jar");
+		loadFrom.add("lwjgl_util.jar");
+		loadFrom.add("jinput.jar");
+		if (ModdishUtils.getOS().contains("Windows")) {
+			saveAs.add("/natives/jinput-dx8_64.dll");
+			saveAs.add("/natives/jinput-dx8.dll");
+			saveAs.add("/natives/jinput-raw.dll");
+			saveAs.add("/natives/lwjgl.dll");
+			saveAs.add("/natives/lwjgl64.dll");
+			saveAs.add("/natives/OpenAL32.dll");
+			saveAs.add("/natives/OpenAL64.dll");
+			loadFrom.add("windows/jinput-dx8_64.dll");
+			loadFrom.add("windows/jinput-dx8.dll");
+			loadFrom.add("windows/jinput-raw.dll");
+			loadFrom.add("windows/lwjgl.dll");
+			loadFrom.add("windows/lwjgl64.dll");
+			loadFrom.add("windows/OpenAL32.dll");
+			loadFrom.add("windows/OpenAL64.dll");
+		}
+		if (ModdishUtils.getOS().contains("Linux")) {
+			saveAs.add("/natives/libjinput-linux64.so");
+			saveAs.add("/natives/libjinput-linux.so");
+			saveAs.add("/natives/liblwjgl.so");
+			saveAs.add("/natives/liblwjgl64.so");
+			saveAs.add("/natives/libopenal.so");
+			saveAs.add("/natives/libopenal64.so");
+			loadFrom.add("linux/libjinput-linux64.so");
+			loadFrom.add("linux/libjinput-linux.so");
+			loadFrom.add("linux/liblwjgl.so");
+			loadFrom.add("linux/liblwjgl64.so");
+			loadFrom.add("linux/libopenal.so");
+			loadFrom.add("linux/libopenal64.so");
+		}
+		if (ModdishUtils.getOS().contains("Solaris")) {
+			saveAs.add("/natives/libjinput-linux64.so");
+			saveAs.add("/natives/libjinput-linux.so");
+			saveAs.add("/natives/liblwjgl.so");
+			saveAs.add("/natives/liblwjgl64.so");
+			saveAs.add("/natives/libopenal.so");
+			saveAs.add("/natives/libopenal64.so");
+			loadFrom.add("linux/libjinput-linux64.so");
+			loadFrom.add("linux/libjinput-linux.so");
+			loadFrom.add("solaris/liblwjgl.so");
+			loadFrom.add("solaris/liblwjgl64.so");
+			loadFrom.add("solaris/libopenal.so");
+			loadFrom.add("solaris/libopenal64.so");
+		}
+		if (ModdishUtils.getOS().contains("Mac OS X")) {
+			saveAs.add("/natives/openal.dylib");
+			saveAs.add("/natives/liblwjgl.jnilib");
+			saveAs.add("/natives/libjinput-osx.jnilib");
+			loadFrom.add("macosx/openal.dylib");
+			loadFrom.add("macosx/liblwjgl.jnilib");
+			loadFrom.add("macosx/libjinput-osx.jnilib");
+		}
+		for(int i = 0; i < saveAs.size(); i++) {
+			if (!new File(binDir + saveAs.get(i)).exists()) {
+				getLWJGLFile(binDir + saveAs.get(i), loadFrom.get(i));
+			}
+		}
 	}
 }

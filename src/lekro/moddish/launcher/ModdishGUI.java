@@ -159,6 +159,18 @@ public class ModdishGUI implements ActionListener {
 		JLabel passLabel = new JLabel("Password:");
 		final JPasswordField passField = new JPasswordField();
 		passField.setPreferredSize(new Dimension(128, 28));
+		passField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Logging in with user "+userField.getText());
+				boolean couldLogin = ModdishLogin.doLogin(userField.getText(), new String(passField.getPassword()));
+				if (couldLogin) {
+					dialog.dispose();
+				}
+			}
+			
+		});
 		passPanel.setLayout(new BoxLayout(passPanel, BoxLayout.X_AXIS));
 		passPanel.add(Box.createHorizontalGlue());
 		passPanel.add(passLabel);
@@ -170,9 +182,12 @@ public class ModdishGUI implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Logging in with user"+userField.getText());
-				ModdishLogin.doLogin(userField.getText(), new String(passField.getPassword()));
-				dialog.dispose();
+				System.out.println("Logging in with user "+userField.getText());
+				boolean couldLogin = ModdishLogin.doLogin(userField.getText(), new String(passField.getPassword()));
+				
+				if (couldLogin) {
+					dialog.dispose();
+				}
 			}
 			
 		});
