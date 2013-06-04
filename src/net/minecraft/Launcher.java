@@ -1,4 +1,4 @@
-package lekro.moddish.launcher;
+package net.minecraft;
 
 import java.applet.Applet;
 import java.applet.AppletStub;
@@ -10,12 +10,13 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @SuppressWarnings("serial")
-public class ModdishApplet extends Applet implements AppletStub {
+public class Launcher extends Applet implements AppletStub {
 	private Applet myApplet;
 	private URL myURL;
 	private boolean isActive = false;
 	private final Map<String, String> parameters;
-	public ModdishApplet(Applet applet, URL docBase) {
+	
+	public Launcher(Applet applet, URL docBase) {
 		parameters = new TreeMap<String, String>();
 		this.setLayout(new BorderLayout());
 		this.add(applet, "Center");

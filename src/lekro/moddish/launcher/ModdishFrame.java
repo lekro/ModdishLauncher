@@ -8,16 +8,19 @@ import java.awt.event.WindowListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import net.minecraft.Launcher;
+
+
 @SuppressWarnings("serial")
 public class ModdishFrame extends Frame implements WindowListener {
-	private ModdishApplet myApplet = null;
+	private Launcher myApplet = null;
 	public ModdishFrame(String title) {
 		super(title);
 		this.addWindowListener(this);
 	}
 	public void startMe(Applet applet, String user, String session, Dimension size, boolean maximize) {
 		try {
-			myApplet = new ModdishApplet(applet, new URL("http://www.minecraft.net/game"));
+			myApplet = new Launcher(applet, new URL("http://www.minecraft.net/game"));
 		} catch (MalformedURLException e) {}
 		myApplet.setParameter("username", user);
 		myApplet.setParameter("sessionid", session);

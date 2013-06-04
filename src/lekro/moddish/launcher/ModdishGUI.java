@@ -22,7 +22,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class ModdishGUI implements ActionListener {
-	private JFrame moddishWindow;
+	protected static JFrame moddishWindow;
 	private JButton vanillaButton, moddishButton, otherButton;
 	protected static JDialog dialog;
 	public ModdishGUI() {
@@ -139,11 +139,19 @@ public class ModdishGUI implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		System.out.println(((JButton) e.getSource()).getText());
 		if (e.getSource().equals(vanillaButton)) {
-			dialog = createLogin();
-			
+			final String minecraftType = "vanilla";
+			dialog = createLogin(minecraftType);
+		}
+		if (e.getSource().equals(moddishButton)) {
+			final String minecraftType = "moddish";
+			dialog = createLogin(minecraftType);
+		}
+		if (e.getSource().equals(otherButton)) {
+			final String minecraftType = "other";
+			dialog = createLogin(minecraftType);
 		}
 	}
-	public JDialog createLogin() {
+	public JDialog createLogin(final String minecraftType) {
 
 		final JDialog dialog = new JDialog(moddishWindow, "Login");
 		JPanel userPanel = new JPanel();
@@ -164,7 +172,7 @@ public class ModdishGUI implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Logging in with user "+userField.getText());
-				boolean couldLogin = ModdishLogin.doLogin(userField.getText(), new String(passField.getPassword()));
+				boolean couldLogin = ModdishLogin.doLogin(userField.getText(), new String(passField.getPassword()), minecraftType);
 				if (couldLogin) {
 					dialog.dispose();
 				}
@@ -183,7 +191,7 @@ public class ModdishGUI implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Logging in with user "+userField.getText());
-				boolean couldLogin = ModdishLogin.doLogin(userField.getText(), new String(passField.getPassword()));
+				boolean couldLogin = ModdishLogin.doLogin(userField.getText(), new String(passField.getPassword()), minecraftType);
 				
 				if (couldLogin) {
 					dialog.dispose();
