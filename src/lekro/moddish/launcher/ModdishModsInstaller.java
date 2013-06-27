@@ -13,6 +13,8 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
+
 public class ModdishModsInstaller {
 	public static void installJarMod(String modPath, String binDir) {
 		String localMod = null;
@@ -39,9 +41,10 @@ public class ModdishModsInstaller {
 		ModdishDownload.getFile(modPath, localMod);
 		
 		try {
-			File tempFile = File.createTempFile(minecraftJar.getName(), null);
-			tempFile.delete();
-			minecraftJar.renameTo(tempFile);
+			File tempFile = new File(binDir + "/mctemp.jar");
+			tempFile.createNewFile();
+			FileUtils.copyFile(minecraftJar, tempFile);
+			minecraftJar.createNewFile();
 			ZipInputStream zisMod = new ZipInputStream(new FileInputStream(localMod));
 			ZipInputStream zisMC = new ZipInputStream(new FileInputStream(tempFile));
 			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(minecraftJar));
@@ -81,8 +84,10 @@ public class ModdishModsInstaller {
 				zos.closeEntry();
 				ze = zisMC.getNextEntry();
 			}
-			zos.close();
 			zisMC.close();
+			tempFile.delete();
+			zos.close();
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -40,15 +40,27 @@ public class ModdishLogin {
 		}
 	}
 	public static void startGame(String username, String sessionid, String minecraftType) {
-		String myDir = System.getProperty("user.dir");
-		String binDir = "minecrafts/"+minecraftType+"/bin/";
+		String myDir = "/" + System.getProperty("user.dir");
+		char[] old = myDir.toCharArray();
+		char[] dirchar = new char[old.length];
+		for (int i = 0; i < old.length; i++) {
+			if (old[i] == '\\') {
+				dirchar[i] = '/';
+			} else {
+				dirchar[i] = old[i];
+			}
+		}
+		
+		myDir = new String(dirchar);
+		System.out.println(myDir);
+		String binDir = myDir + "/minecrafts/"+minecraftType+"/bin/";
 		if (!new File(binDir + "minecraft.jar").exists()) {
 			System.out.println("Grabbing minecraft.jar from Mojang, you do not appear to have it!");
 			ModdishDownload.getFile("http://assets.minecraft.net/1_5_2/minecraft.jar", binDir + "minecraft.jar");
 		}
 		ModdishDownload.getLWJGL(binDir);
 		if (minecraftType.equals("moddish")) {
-			ModdishModsInstaller.installJarMod("http://files.minecraftforge.net/minecraftforge/minecraftforge-universal-1.5.2-7.8.0.716.zip", binDir);
+			ModdishModsInstaller.installJarMod("http://files.minecraftforge.net/minecraftforge/minecraftforge-universal-1.5.2-7.8.0.686.zip", binDir);
 		}
 		URL minecraftJar = null, lwjglJar = null, lwjgl_utilJar = null, jinputJar = null;
 		try {
@@ -57,11 +69,14 @@ public class ModdishLogin {
 			lwjgl_utilJar = new URL("jar:file:" + binDir + "lwjgl_util.jar" + "!/");
 			jinputJar = new URL("jar:file:" + binDir + "jinput.jar" + "!/");
 		} catch (MalformedURLException e2) {}  
-		String nativesDir = new File(binDir, "natives").getAbsolutePath();
+		String nativesDir = binDir+ "natives";
 
 		System.setProperty("org.lwjgl.librarypath", nativesDir);
 		System.setProperty("net.java.games.input.librarypath", nativesDir);
-		System.setProperty("minecraft.applet.TargetDirectory", myDir + "/minecrafts/"+minecraftType);
+		System.setProperty("minecraft.applet.TargetDirectory", myDir + "/minecrafts/" + minecraftType);
+		System.setProperty("fml.debugClassLoadingFiner", "true");
+		System.setProperty("fml.log.level", "ALL");
+		System.out.println(myDir + "/minecrafts/"+minecraftType);
 		URL[] urls = new URL[]{minecraftJar, lwjglJar, lwjgl_utilJar, jinputJar};
 		ClassLoader cl = new URLClassLoader(urls, ModdishLauncher.class.getClassLoader());
 		Class<?> mc = null;
