@@ -54,7 +54,7 @@ public class ModdishModsInstaller {
 				while (ze.getName().contains("META-INF")) {
 					ze = zisMod.getNextEntry();
 				}
-				System.out.println("Copying... "+ze.getName());
+				//System.out.println("Copying... "+ze.getName());
 				zos.putNextEntry(ze);
 				byte[] buffer = new byte[1024];
 				for (int read = zisMod.read(buffer); read != -1; read = zisMod.read(buffer)) {
@@ -73,7 +73,7 @@ public class ModdishModsInstaller {
 				while (modZip.getEntry(ze.getName()) != null) {
 					ze = zisMC.getNextEntry();
 				}
-				System.out.println("Copying... "+ze.getName());
+				//System.out.println("Copying... "+ze.getName());
 				
 				zos.putNextEntry(ze);
 				byte[] buffer = new byte[1024];
