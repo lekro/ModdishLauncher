@@ -73,9 +73,11 @@ public class ModdishDownload {
 		saveAs.add("lwjgl.jar");
 		saveAs.add("lwjgl_util.jar");
 		saveAs.add("jinput.jar");
+		saveAs.add("lzma.jar");
 		loadFrom.add("lwjgl.jar");
 		loadFrom.add("lwjgl_util.jar");
 		loadFrom.add("jinput.jar");
+		loadFrom.add("lzma.jar");
 		if (ModdishUtils.getOS().contains("Windows")) {
 			saveAs.add("/natives/jinput-dx8_64.dll");
 			saveAs.add("/natives/jinput-dx8.dll");

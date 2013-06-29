@@ -40,7 +40,7 @@ public class ModdishLogin {
 		}
 	}
 	public static void startGame(String username, String sessionid, String minecraftType) {
-		String myDir = "/" + System.getProperty("user.dir");
+		String myDir = "" + System.getProperty("user.dir");
 		char[] old = myDir.toCharArray();
 		char[] dirchar = new char[old.length];
 		for (int i = 0; i < old.length; i++) {
@@ -50,7 +50,6 @@ public class ModdishLogin {
 				dirchar[i] = old[i];
 			}
 		}
-		
 		myDir = new String(dirchar);
 		System.out.println(myDir);
 		String binDir = myDir + "/minecrafts/"+minecraftType+"/bin/";
@@ -60,25 +59,29 @@ public class ModdishLogin {
 		}
 		ModdishDownload.getLWJGL(binDir);
 		if (minecraftType.equals("moddish")) {
-			ModdishModsInstaller.installJarMod("http://files.minecraftforge.net/minecraftforge/minecraftforge-universal-1.5.2-7.8.0.686.zip", binDir);
+			ModdishModsInstaller.installJarMod("http://files.minecraftforge.net/minecraftforge/minecraftforge-universal-1.5.2-7.8.1.737.zip", binDir);
 		}
-		URL minecraftJar = null, lwjglJar = null, lwjgl_utilJar = null, jinputJar = null;
+		String nativesDir = binDir + "natives/";
+		String[] lwjglJars = new String[] { "lwjgl.jar", "lwjgl_util.jar",
+				"jinput.jar" };
+		URL[] urls = new URL[4];
 		try {
-			minecraftJar = new URL("jar:file:" + binDir + "minecraft.jar" + "!/");
-			lwjglJar = new URL("jar:file:" + binDir + "lwjgl.jar" + "!/");
-			lwjgl_utilJar = new URL("jar:file:" + binDir + "lwjgl_util.jar" + "!/");
-			jinputJar = new URL("jar:file:" + binDir + "jinput.jar" + "!/");
-		} catch (MalformedURLException e2) {}  
-		String nativesDir = binDir+ "natives";
+			File f = new File(binDir, "minecraft.jar");
+			urls[0] = f.toURI().toURL();
 
+			for (int i = 1; i < urls.length; i++) {
+				File jar = new File(binDir, lwjglJars[i - 1]);
+				urls[i] = jar.toURI().toURL();
+			}
+		} catch (MalformedURLException e) {
+			System.err.println("MalformedURLException, " + e.toString());
+			System.exit(5);
+		}
 		System.setProperty("org.lwjgl.librarypath", nativesDir);
 		System.setProperty("net.java.games.input.librarypath", nativesDir);
-		System.setProperty("minecraft.applet.TargetDirectory", myDir + "/minecrafts/" + minecraftType);
-		System.setProperty("fml.debugClassLoadingFiner", "true");
-		System.setProperty("fml.log.level", "ALL");
+		System.setProperty("minecraft.applet.TargetDirectory", myDir + "/minecrafts/" + minecraftType + "/");
 		System.out.println(myDir + "/minecrafts/"+minecraftType);
-		URL[] urls = new URL[]{minecraftJar, lwjglJar, lwjgl_utilJar, jinputJar};
-		ClassLoader cl = new URLClassLoader(urls, ModdishLauncher.class.getClassLoader());
+		URLClassLoader cl = new URLClassLoader(urls, ModdishLogin.class.getClassLoader());
 		Class<?> mc = null;
 		//																								Thanks to Forkk and Orochimarufan for helping me with getting Minecraft to target a different directory :D
 		try {
@@ -102,7 +105,7 @@ public class ModdishLogin {
 		}
 		mcPathField.setAccessible(true);
 		try {
-			mcPathField.set(null, new File(myDir + "/minecrafts/"+minecraftType+"/"));
+			mcPathField.set(null, new File(myDir + "/minecrafts/" + minecraftType + "/"));
 		} catch (IllegalArgumentException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
